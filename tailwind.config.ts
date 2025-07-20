@@ -26,7 +26,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -51,6 +52,14 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				quantum: {
+					grid: 'hsl(var(--quantum-grid))',
+					wire: 'hsl(var(--quantum-wire))',
+					gate: 'hsl(var(--quantum-gate))',
+					measurement: 'hsl(var(--quantum-measurement))',
+					hadamard: 'hsl(var(--quantum-hadamard))',
+					control: 'hsl(var(--quantum-control))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -84,11 +93,49 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'quantum-pulse': {
+					'0%, 100%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '0.7',
+						transform: 'scale(1.05)'
+					}
+				},
+				'quantum-glow': {
+					'0%, 100%': {
+						'box-shadow': '0 0 20px hsl(var(--primary) / 0.3)'
+					},
+					'50%': {
+						'box-shadow': '0 0 40px hsl(var(--primary) / 0.6)'
+					}
+				},
+				'phase-rotate': {
+					from: {
+						transform: 'rotate(0deg)'
+					},
+					to: {
+						transform: 'rotate(360deg)'
+					}
+				},
+				'qubit-oscillate': {
+					'0%, 100%': {
+						transform: 'translateY(0px)'
+					},
+					'50%': {
+						transform: 'translateY(-5px)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'quantum-pulse': 'quantum-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'quantum-glow': 'quantum-glow 3s ease-in-out infinite',
+				'phase-rotate': 'phase-rotate 4s linear infinite',
+				'qubit-oscillate': 'qubit-oscillate 1.5s ease-in-out infinite'
 			}
 		}
 	},
