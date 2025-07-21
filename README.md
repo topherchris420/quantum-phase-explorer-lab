@@ -1,73 +1,163 @@
-# Welcome to your Lovable project
+# Quantum Phase Estimation Simulation
 
-## Project info
+An interactive web-based simulation demonstrating the quantum phase estimation algorithm for efficient quantum sampling, showcasing the polynomial advantage over classical direct sampling methods.
 
-**URL**: https://lovable.dev/projects/d5a104b1-e47c-4d60-a8fd-8b103b9f5c12
+## Overview
 
-## How can I edit this code?
+This simulation illustrates the quantum phase estimation algorithm as described in quantum computing literature, specifically focusing on measuring disorder-averaged expectation values of single-qubit Pauli operators. The algorithm demonstrates how quantum processors can prepare initial states as superpositions over all disorder configurations, enabling efficient phase estimation with polynomial advantage.
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+### 🎯 Core Simulation
+- **Dual-mode visualization**: Compare direct sampling vs. quantum phase estimation
+- **Interactive parameter control**: Adjust epsilon (ε) to see scaling relationships
+- **Real-time circuit generation**: Watch quantum circuits adapt to your parameters
+- **Step-by-step execution**: Learn each phase of the algorithm
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d5a104b1-e47c-4d60-a8fd-8b103b9f5c12) and start prompting.
+### 📊 Educational Components
+- **Bloch sphere visualization**: See quantum states evolve in real-time
+- **Probability distributions**: Understand measurement outcomes
+- **Complexity comparison**: Visualize N_sample ~ 1/ε² vs. polynomial scaling
+- **Circuit depth analysis**: Explore depth ~ 1/ε relationships
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🔬 Technical Features
+- **Quantum Fourier Transform (QFT)**: Interactive QFT implementation
+- **Ancilla qubit management**: Configurable number of ancillas (m = -log₂ ε)
+- **Grover's diffusion operator**: Built-in implementation for phase estimation
+- **Measurement simulation**: Realistic quantum measurement modeling
 
-**Use your preferred IDE**
+## Algorithm Details
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Sampling Phase
+The classical approach requires:
+- **Sample complexity**: N_sample ~ 1/ε²
+- **Direct disorder sampling**: Each configuration sampled independently
+- **Exponential overhead**: Scales poorly with precision requirements
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Phase Estimation Phase
+The quantum approach offers:
+- **Polynomial advantage**: Efficient phase estimation using ancillas
+- **Superposition preparation**: All disorder configurations simultaneously
+- **Controlled operations**: Precise phase accumulation
+- **QFT readout**: Extract phase information efficiently
 
-Follow these steps:
+## Getting Started
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Prerequisites
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- JavaScript enabled
+- No additional installations required
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Running the Simulation
+1. Open the simulation in your web browser
+2. Adjust the epsilon (ε) parameter using the slider
+3. Click "Run Algorithm" to execute the full simulation
+4. Use "Step Mode" for detailed algorithm walkthrough
+5. Compare results between sampling and phase estimation methods
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Parameter Guidelines
+- **ε = 0.1**: Good starting point for learning
+- **ε = 0.01**: See clear polynomial advantage
+- **ε = 0.001**: Observe scaling differences dramatically
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## Educational Use Cases
+
+### 🎓 Quantum Computing Courses
+- Demonstrate quantum advantage in practical algorithms
+- Illustrate superposition and interference principles
+- Show real applications of QFT and phase estimation
+
+### 🔬 Research Applications
+- Prototype quantum algorithms for condensed matter physics
+- Study disorder-averaged quantum systems
+- Explore quantum sampling techniques
+
+### 💡 Self-Learning
+- Interactive exploration of quantum algorithms
+- Visual understanding of quantum circuit design
+- Hands-on experience with quantum complexity theory
+
+## Technical Implementation
+
+### Quantum Circuit Components
+```
+Ancillas: |0⟩⊗m ──[H]──[Controlled-U]──[QFT†]──[Measure]
+Target:   |ψ⟩ ────────[U^(2^j)]─────────────────────────
 ```
 
-**Edit a file directly in GitHub**
+### Key Relationships
+- **Ancillas needed**: m = -log₂(ε)
+- **Circuit depth**: O(1/ε)
+- **Sample complexity**: O(poly(1/ε)) vs O(1/ε²)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Supported Operations
+- Hadamard gates for superposition creation
+- Controlled unitary operations (C-U^(2^j))
+- Quantum Fourier Transform and inverse
+- Projective measurements in computational basis
 
-**Use GitHub Codespaces**
+## Customization Options
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Algorithm Parameters
+- **Precision (ε)**: 0.001 to 0.5
+- **Ancilla qubits**: 1 to 10 qubits
+- **Operator type**: Pauli-X, Y, Z operators
+- **Disorder strength**: Configurable disorder parameters
 
-## What technologies are used for this project?
+### Visualization Settings
+- **Animation speed**: Adjustable for learning pace
+- **Circuit style**: Compact or detailed view
+- **Color scheme**: Multiple themes available
+- **Export options**: PNG, SVG, data export
 
-This project is built with:
+## Performance Notes
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Simulation Limitations
+- Classical simulation of quantum circuits (exponential scaling)
+- Limited to ~10-12 qubits for real-time performance
+- Approximations used for large parameter regimes
 
-## How can I deploy this project?
+### Optimization Tips
+- Use fewer ancillas for faster simulation
+- Enable "Fast Mode" for quick parameter exploration
+- Consider "Theory Mode" for algorithm understanding without full simulation
 
-Simply open [Lovable](https://lovable.dev/projects/d5a104b1-e47c-4d60-a8fd-8b103b9f5c12) and click on Share -> Publish.
+## Scientific Background
 
-## Can I connect a custom domain to my Lovable project?
+This simulation is based on quantum algorithms for efficient sampling in disordered quantum systems. The phase estimation technique provides exponential speedup for certain classes of problems involving:
 
-Yes, you can!
+- Disorder-averaged expectation values
+- Many-body localization studies
+- Quantum thermalization research
+- Anderson localization phenomena
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+We welcome contributions to improve the simulation:
+- Bug reports and feature requests
+- Educational content suggestions
+- Algorithm optimizations
+- Additional quantum operators
+
+## References
+
+1. Quantum Phase Estimation Algorithm - Nielsen & Chuang
+2. Grover's Diffusion Operator Applications
+3. Disorder-Averaged Quantum Systems
+4. Polynomial Quantum Advantage in Sampling
+
+## License
+
+This educational simulation is provided under MIT License for academic and research use.
+
+## Support
+
+For questions, suggestions, or technical issues:
+- Check the built-in help system (? button)
+- Review the interactive tutorials
+- Consult the algorithm documentation
+- Submit issues via the feedback system
+
+---
+
+*Explore the quantum advantage in phase estimation and discover how quantum computers can revolutionize sampling in complex quantum systems!*
