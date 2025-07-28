@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
@@ -8,7 +8,15 @@ import { SamplingSection } from './quantum/SamplingSection';
 import { PhaseEstimationSection } from './quantum/PhaseEstimationSection';
 import { ControlPanel } from './quantum/ControlPanel';
 import { ResultsDisplay } from './quantum/ResultsDisplay';
+import QuantumSensing from './quantum/QuantumSensing';
+import Cryptography from './quantum/Cryptography';
 import { useToast } from '@/hooks/use-toast';
+
+export enum Scenario {
+  Educational = "Educational Mode",
+  QuantumSensing = "Quantum Sensing",
+  Cryptography = "Post-Quantum Cryptography",
+}
 
 export interface SimulationState {
   epsilon: number;
@@ -21,6 +29,8 @@ export interface SimulationState {
     accuracy: number;
     circuitDepth: number;
   };
+  scenario: Scenario;
+  noiseLevel: number;
 }
 
 const QuantumSimulator: React.FC = () => {
@@ -35,7 +45,9 @@ const QuantumSimulator: React.FC = () => {
       phaseResults: [],
       accuracy: 0,
       circuitDepth: 0
-    }
+    },
+    scenario: Scenario.Educational,
+    noiseLevel: 0
   });
 
   const updateState = useCallback((updates: Partial<SimulationState>) => {
@@ -65,21 +77,24 @@ const QuantumSimulator: React.FC = () => {
       
       // Simulate algorithm execution
       setTimeout(() => {
+        const accuracyWithoutNoise = Math.max(0.7, 1 - state.epsilon);
+        const accuracyWithNoise = accuracyWithoutNoise * (1 - state.noiseLevel);
+
         const mockResults = {
-          samplingResults: Array.from({ length: 10 }, () => 
+          samplingResults: Array.from({ length: 10 }, () =>
             Math.random() > 0.5 ? '1' : '0'
           ),
-          phaseResults: Array.from({ length: 2**state.ancillaQubits }, (_, i) => 
+          phaseResults: Array.from({ length: 2 ** state.ancillaQubits }, (_, i) =>
             i.toString(2).padStart(state.ancillaQubits, '0')
           ).slice(0, 8),
-          accuracy: Math.max(0.7, 1 - state.epsilon),
-          circuitDepth: Math.ceil(1 / state.epsilon)
+          accuracy: accuracyWithNoise,
+          circuitDepth: Math.ceil(1 / state.epsilon),
         };
-        
-        updateState({ 
-          results: mockResults, 
+
+        updateState({
+          results: mockResults,
           isRunning: false,
-          currentStep: 5 
+          currentStep: 5,
         });
         
         toast({ 
@@ -136,48 +151,73 @@ const QuantumSimulator: React.FC = () => {
           </div>
         </div>
 
+		        {/* Scenario Selector */}
+        <div className="flex justify-center gap-2">
+          {Object.values(Scenario).map((scenario) => (
+            <Button
+              key={scenario}
+              variant={state.scenario === scenario ? "default" : "outline"}
+              onClick={() => updateState({ scenario })}
+            >
+              {scenario}
+            </Button>
+          ))}
+        </div>
+
         {/* Control Panel */}
         <ControlPanel
           epsilon={state.epsilon}
           ancillaQubits={state.ancillaQubits}
           isRunning={state.isRunning}
+          noiseLevel={state.noiseLevel}
           onEpsilonChange={handleEpsilonChange}
           onAncillaChange={(value) => updateState({ ancillaQubits: value })}
+          onNoiseChange={(value) => updateState({ noiseLevel: value[0] })}
           onRun={handleRunAlgorithm}
           onReset={handleReset}
         />
 
-        {/* Main Split View */}
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Sampling Section */}
-          <SamplingSection
-            epsilon={state.epsilon}
-            nsample={nsample}
-            isRunning={state.isRunning}
-            currentStep={state.currentStep}
-            results={state.results.samplingResults}
-          />
+        {/* Scenario-based Content */}
+        {state.scenario === Scenario.Educational && (
+          <>
+            {/* Main Split View */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Sampling Section */}
+              <SamplingSection
+                epsilon={state.epsilon}
+                nsample={nsample}
+                isRunning={state.isRunning}
+                currentStep={state.currentStep}
+                results={state.results.samplingResults}
+              />
 
-          {/* Phase Estimation Section */}
-          <PhaseEstimationSection
-            ancillaQubits={state.ancillaQubits}
-            epsilon={state.epsilon}
-            isRunning={state.isRunning}
-            currentStep={state.currentStep}
-            results={state.results.phaseResults}
-          />
-        </div>
+              {/* Phase Estimation Section */}
+              <PhaseEstimationSection
+                ancillaQubits={state.ancillaQubits}
+                epsilon={state.epsilon}
+                isRunning={state.isRunning}
+                currentStep={state.currentStep}
+                results={state.results.phaseResults}
+              />
+            </div>
 
-        {/* Results Display */}
-        {(state.results.phaseResults.length > 0 || state.results.samplingResults.length > 0) && (
-          <ResultsDisplay
-            samplingResults={state.results.samplingResults}
-            phaseResults={state.results.phaseResults}
-            accuracy={state.results.accuracy}
-            circuitDepth={state.results.circuitDepth}
-            epsilon={state.epsilon}
-          />
+            {/* Results Display */}
+            {(state.results.phaseResults.length > 0 || state.results.samplingResults.length > 0) && (
+              <ResultsDisplay
+                samplingResults={state.results.samplingResults}
+                phaseResults={state.results.phaseResults}
+                accuracy={state.results.accuracy}
+                circuitDepth={state.results.circuitDepth}
+                epsilon={state.epsilon}
+            noiseLevel={state.noiseLevel}
+              />
+            )}
+          </>
         )}
+
+        {state.scenario === Scenario.QuantumSensing && <QuantumSensing />}
+
+        {state.scenario === Scenario.Cryptography && <Cryptography />}
       </div>
     </div>
   );
