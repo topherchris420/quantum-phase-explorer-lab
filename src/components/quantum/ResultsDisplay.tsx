@@ -11,6 +11,7 @@ interface ResultsDisplayProps {
   accuracy: number;
   circuitDepth: number;
   epsilon: number;
+  noiseLevel: number;
 }
 
 export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
@@ -18,7 +19,8 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
   phaseResults,
   accuracy,
   circuitDepth,
-  epsilon
+  epsilon,
+  noiseLevel,
 }) => {
   // Calculate phase estimation histogram
   const phaseHistogram = phaseResults.reduce((acc, result) => {
@@ -74,6 +76,10 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
                 <div className="flex justify-between text-xs">
                   <span>Error rate:</span>
                   <span className="font-mono">{((1 - accuracy) * 100).toFixed(1)}%</span>
+                </div>
+                <div className="flex justify-between text-xs text-destructive">
+                  <span>Noise level:</span>
+                  <span className="font-mono">{(noiseLevel * 100).toFixed(0)}%</span>
                 </div>
               </div>
             </div>

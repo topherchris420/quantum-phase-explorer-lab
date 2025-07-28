@@ -10,8 +10,10 @@ interface ControlPanelProps {
   epsilon: number;
   ancillaQubits: number;
   isRunning: boolean;
+  noiseLevel: number;
   onEpsilonChange: (value: number[]) => void;
   onAncillaChange: (value: number) => void;
+  onNoiseChange: (value: number[]) => void;
   onRun: () => void;
   onReset: () => void;
 }
@@ -20,10 +22,12 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   epsilon,
   ancillaQubits,
   isRunning,
+  noiseLevel,
   onEpsilonChange,
   onAncillaChange,
+  onNoiseChange,
   onRun,
-  onReset
+  onReset,
 }) => {
   return (
     <Card className="bg-card border-border">
@@ -35,7 +39,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       </CardHeader>
       
       <CardContent className="p-6">
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-4 gap-6">
           {/* Epsilon Control */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -132,6 +136,41 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             </div>
           </div>
 
+          {/* Noise Control */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Noise Level</label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Simulates depolarizing noise on qubits</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+
+            <div className="space-y-2">
+              <Slider
+                value={[noiseLevel]}
+                onValueChange={onNoiseChange}
+                min={0}
+                max={0.2}
+                step={0.01}
+                className="w-full"
+                disabled={isRunning}
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>0%</span>
+                <Badge variant="outline" className="text-xs">
+                  {(noiseLevel * 100).toFixed(0)}%
+                </Badge>
+                <span>20%</span>
+              </div>
+            </div>
+          </div>
           {/* Action Buttons */}
           <div className="space-y-4">
             <div className="space-y-2">
